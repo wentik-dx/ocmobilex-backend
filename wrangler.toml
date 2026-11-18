@@ -3,11 +3,11 @@ compatibility_date = "2026-01-01"
 pages_build_output_dir = "./public"
 
 # KV namespace used by every function (env.OCMX).
-# Replace the placeholder id with the output of:
+# Created in the Cloudflare dashboard (Storage & Databases → KV).
 #   wrangler kv namespace create OCMX
 [[kv_namespaces]]
 binding = "OCMX"
-id = "REPLACE_WITH_YOUR_KV_NAMESPACE_ID"
+id = "ac5d1e98dd054ba8b7894d81e7d58701"
 # Uncomment for `wrangler pages dev` with a separate preview namespace:
 # preview_id = "REPLACE_WITH_YOUR_PREVIEW_KV_NAMESPACE_ID"
 
