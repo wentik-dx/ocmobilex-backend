@@ -1,0 +1,22 @@
+name = "ocmobilex"
+compatibility_date = "2026-01-01"
+pages_build_output_dir = "./public"
+
+# KV namespace used by every function (env.OCMX).
+# Replace the placeholder id with the output of:
+#   wrangler kv namespace create OCMX
+[[kv_namespaces]]
+binding = "OCMX"
+id = "REPLACE_WITH_YOUR_KV_NAMESPACE_ID"
+# Uncomment for `wrangler pages dev` with a separate preview namespace:
+# preview_id = "REPLACE_WITH_YOUR_PREVIEW_KV_NAMESPACE_ID"
+
+# Secrets are NOT stored here. Set them with:
+#   wrangler pages secret put OWNER_TOKEN     --project-name ocmobilex
+#   wrangler pages secret put OWNER_PASSWORD  --project-name ocmobilex
+#   wrangler pages secret put SESSION_SECRET  --project-name ocmobilex
+#   wrangler pages secret put AI_TOKEN        --project-name ocmobilex   (optional)
+#
+# Optional non-secret vars:
+[vars]
+ENVIRONMENT = "production"
