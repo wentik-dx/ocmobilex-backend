@@ -37,9 +37,11 @@ function cleanLink(value, field) {
   if (typeof value !== "string") throw new HttpError(400, `${field} must be a string`);
   const link = value.trim();
   if (link.length > 200) throw new HttpError(400, `${field} must be at most 200 characters`);
+  // Bare hosts ("wentik.dev", "github.com/wentik") get an https prefix.
+  const candidate = /^[a-z][a-z0-9+.-]*:\/\//i.test(link) ? link : `https://${link}`;
   let url;
   try {
-    url = new URL(link);
+    url = new URL(candidate);
   } catch {
     throw new HttpError(400, `${field} must be a valid http(s) URL`);
   }
