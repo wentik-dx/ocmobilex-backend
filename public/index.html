@@ -50,6 +50,10 @@
   .tile { background: #101019; border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; }
   .tile b { display: block; font-size: 13px; margin-bottom: 3px; }
   .tile span { color: var(--dim); font-size: 12.5px; }
+  a.tile { color: var(--txt); text-decoration: none; display: block; transition: border-color .15s ease, transform .15s ease; }
+  a.tile:hover { border-color: var(--accent); text-decoration: none; transform: translateY(-1px); }
+  a.tile b::after { content: " ↗"; color: var(--accent); font-weight: 400; }
+  .app-note { color: var(--dim); font-size: 12.5px; margin: 10px 0 0; }
   a { color: var(--accent); text-decoration: none; }
   a:hover { text-decoration: underline; }
   footer { margin-top: 22px; color: var(--dim); font-size: 12.5px; display: flex; gap: 14px; flex-wrap: wrap; }
@@ -78,6 +82,23 @@
     <div class="row"><span class="mono">runtime</span><span class="pill" id="runtime">Cloudflare Pages Functions</span></div>
     <div class="row"><span class="mono">storage</span><span class="pill" id="storage">KV · OCMX</span></div>
     <div class="row"><span class="mono">base url</span><span class="mono">https://ocmobilex.pages.dev</span></div>
+  </div>
+
+  <div class="card" id="openapp">
+    <h2>Open in the app</h2>
+    <p style="margin:0 0 12px">
+      The Android app registers <code>ocmx://</code> and verified
+      <code>https://ocmobilex.pages.dev</code> links, so these jump straight to the
+      matching screen instead of a browser tab.
+    </p>
+    <div class="grid">
+      <a class="tile" href="ocmx://account"><b>Account</b><span>Sign in, profile, avatars.</span></a>
+      <a class="tile" href="ocmx://share"><b>Share chat</b><span>Publish a transcript.</span></a>
+      <a class="tile" href="ocmx://publish"><b>Publish</b><span>HTML, images, music.</span></a>
+      <a class="tile" href="ocmx://bug"><b>Bug report</b><span>Send a report with logs.</span></a>
+      <a class="tile" href="ocmx://idea"><b>Suggest idea</b><span>Idea board and voting.</span></a>
+    </div>
+    <p class="app-note" id="app-note"></p>
   </div>
 
   <div class="card">
@@ -177,6 +198,17 @@ curl https://ocmobilex.pages.dev/api/account/me -H "Authorization: Bearer $TOKEN
         pill.className = "pill bad";
       });
   })();
+</script>
+<script>
+(function () {
+  var note = document.getElementById("app-note");
+  var ua = navigator.userAgent || "";
+  var isAndroid = /Android/i.test(ua);
+  if (!note) return;
+  note.textContent = isAndroid
+    ? "Tap a card — the app opens the matching screen."
+    : "These links work on Android. On desktop they are ignored.";
+})();
 </script>
 </body>
 </html>

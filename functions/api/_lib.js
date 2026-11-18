@@ -20,7 +20,7 @@ export const CORS_HEADERS = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Methods": "GET, POST, PATCH, DELETE, OPTIONS",
   "Access-Control-Allow-Headers":
-    "Content-Type, Authorization, X-Owner-Token, X-AI-Token",
+    "Content-Type, Authorization, X-Auth-Token, X-Owner-Token, X-AI-Token",
   "Access-Control-Max-Age": "86400",
 };
 
@@ -552,9 +552,12 @@ export function publicUser(user, options = {}) {
     role: user.role || "user",
     bio: user.bio || "",
     color: user.color || "",
+    avatar: user.avatar || "",
     links: {
       github: (user.links && user.links.github) || "",
-      site: (user.links && user.links.site) || "",
+      site: (user.links && (user.links.site || user.links.website)) || "",
+      website: (user.links && (user.links.website || user.links.site)) || "",
+      telegram: (user.links && user.links.telegram) || "",
     },
     joinedAt: user.joinedAt || null,
     stats: {

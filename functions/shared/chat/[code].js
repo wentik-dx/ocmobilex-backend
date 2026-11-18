@@ -4,6 +4,7 @@
  * URL actually points at.
  */
 import { kvGet, escapeHtml, CORS_HEADERS } from "../../api/_lib.js";
+import { appLinkBanner, APP_BANNER_CSS } from "../../_applink.js";
 
 const ROLE_LABEL = {
   user: "user",
@@ -48,6 +49,7 @@ function shell(title, inner) {
   button:disabled { opacity:.55; cursor:default; }
   .note { color:var(--dim); font-size:12px; margin-top:8px; }
   a { color:var(--accent); }
+  ${APP_BANNER_CSS}
 </style></head>
 <body><div class="wrap">${inner}</div></body></html>`;
 }
@@ -142,7 +144,8 @@ export async function onRequestGet({ env, params }) {
 
   const html = shell(
     `${share.title || "Shared chat"} · OCMobileX`,
-    `<header>
+    `${appLinkBanner("share", raw)}
+     <header>
        <h1>${escapeHtml(share.title || "Shared chat")}</h1>
        <div class="meta">
          <span class="pill">owner: ${escapeHtml(share.owner || "unknown")}</span>

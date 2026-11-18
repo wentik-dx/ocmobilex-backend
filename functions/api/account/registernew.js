@@ -65,6 +65,7 @@ export const onRequestPost = route(async ({ request, env }) => {
     role,
     bio: "",
     color: "",
+    avatar: "",
     links: { github: "", site: "" },
     joinedAt: nowIso(),
     updatedAt: nowIso(),

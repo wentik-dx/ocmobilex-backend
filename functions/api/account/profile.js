@@ -49,15 +49,56 @@ function cleanLink(value, field) {
   return url.toString();
 }
 
+/** Telegram accepts a bare `@handle` as well as a full URL. */
+function cleanTelegram(value) {
+  if (value === undefined || value === null || value === "") return "";
+  if (typeof value !== "string") throw new HttpError(400, "links.telegram must be a string");
+  const text = value.trim();
+  if (!text) return "";
+  if (text.startsWith("@")) return `https://t.me/${text.slice(1)}`;
+  return cleanLink(text, "links.telegram");
+}
+
+/**
+ * Avatars are either a plain https URL or an inline data URI. Inline images are
+ * capped so a profile record stays small enough for KV and for list responses.
+ */
+const AVATAR_MAX = 180 * 1024; // ~135 KB of image bytes
+const DATA_URI = /^data:image\/(png|jpe?g|webp|gif);base64,[A-Za-z0-9+/=]+$/i;
+
+function cleanAvatar(value) {
+  if (value === undefined || value === null || value === "") return "";
+  if (typeof value !== "string") throw new HttpError(400, "avatar must be a string");
+  const avatar = value.trim();
+  if (!avatar) return "";
+  if (avatar.length > AVATAR_MAX) {
+    throw new HttpError(413, "avatar is too large (max ~180 KB as base64)");
+  }
+  if (DATA_URI.test(avatar)) return avatar;
+  let url;
+  try {
+    url = new URL(avatar);
+  } catch {
+    throw new HttpError(400, "avatar must be an https URL or an image data URI");
+  }
+  if (url.protocol !== "https:") {
+    throw new HttpError(400, "avatar URLs must use https");
+  }
+  return url.toString();
+}
+
 export const onRequestPatch = route(async ({ request, env }) => {
   const account = await requireUser(request, env);
-  const body = await readJson(request, 32 * 1024);
+  const body = await readJson(request, 256 * 1024);
 
   if (body.bio !== undefined) {
     account.bio = optionalString(body.bio, "bio", 280);
   }
   if (body.color !== undefined) {
     account.color = cleanColor(body.color);
+  }
+  if (body.avatar !== undefined) {
+    account.avatar = cleanAvatar(body.avatar);
   }
   if (body.links !== undefined) {
     if (body.links === null) {
@@ -71,6 +112,12 @@ export const onRequestPatch = route(async ({ request, env }) => {
       }
       if (body.links.site !== undefined) {
         links.site = cleanLink(body.links.site, "links.site");
+      }
+      if (body.links.website !== undefined) {
+        links.site = cleanLink(body.links.website, "links.website");
+      }
+      if (body.links.telegram !== undefined) {
+        links.telegram = cleanTelegram(body.links.telegram);
       }
       account.links = links;
     }
