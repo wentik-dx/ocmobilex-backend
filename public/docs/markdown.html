@@ -1,0 +1,334 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>OCMX Markdown vocabulary</title>
+<meta name="description" content="Every custom markdown tag supported by OpenCode Mobile: styling, spoilers, details, viz embeds, progress bars, ions, deep links, images and answer forms.">
+<style>
+  :root{color-scheme:dark;--bg:#0b0b12;--card:#14141f;--card2:#101019;--line:#262638;--txt:#e7e7f0;--dim:#a1a1b5;--accent:#8b7bff;--accent2:#4fb3ff;--ok:#34d399;--warn:#fbbf24}
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth;scroll-padding-top:76px}
+  body{margin:0;padding:0 16px 72px;background:radial-gradient(1100px 560px at 50% -12%,#1b1830 0%,var(--bg) 58%);color:var(--txt);font:15px/1.65 ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+  a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}
+  .nav{position:sticky;top:0;z-index:20;margin:0 -16px 30px;padding:11px 16px;background:rgba(11,11,18,.88);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+  .nav-in{max-width:1240px;margin:0 auto;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:-.02em;color:var(--txt)}.brand:hover{text-decoration:none}
+  .logo{width:34px;height:34px;border-radius:10px;flex:0 0 auto;background:linear-gradient(135deg,var(--accent),var(--accent2));display:grid;place-items:center;color:#0b0b12;font-size:13px;font-weight:900}
+  .nav-links{display:flex;gap:6px;margin-left:auto;flex-wrap:wrap}
+  .nav-links a{padding:6px 12px;border-radius:9px;color:var(--dim);font-size:13.5px;font-weight:600;border:1px solid transparent}
+  .nav-links a:hover,.nav-links a.active{color:var(--txt);background:#1c1b2c;border-color:var(--line);text-decoration:none}
+  .wrap{max-width:1240px;margin:0 auto}
+  .hero{padding:12px 0 6px}
+  .eyebrow{display:inline-flex;align-items:center;gap:7px;border:1px solid #3b3560;background:#1a1830;border-radius:999px;padding:4px 12px;font-size:12px;font-weight:700;color:#c9c4ff;letter-spacing:.04em;text-transform:uppercase}
+  h1{font-size:clamp(28px,6vw,42px);line-height:1.1;letter-spacing:-.03em;margin:16px 0 8px}
+  h1 .g{background:linear-gradient(100deg,var(--accent),var(--accent2));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .lead{color:var(--dim);max-width:840px;margin:0}
+  .layout{display:grid;gap:22px;margin-top:26px}
+  @media(min-width:1080px){.layout{grid-template-columns:224px minmax(0,1fr);align-items:start}}
+  .aside{position:static}@media(min-width:1080px){.aside{position:sticky;top:76px}}
+  .toc{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;max-height:calc(100vh - 96px);overflow:auto}
+  .toc strong{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--dim);margin:0 0 9px}
+  .toc a{display:block;font-size:13px;padding:4px 0;color:var(--dim)}
+  .toc a:hover{color:var(--txt);text-decoration:none}.toc a.active{color:var(--accent);font-weight:700}
+  .toc hr{border:0;border-top:1px solid var(--line);margin:9px 0}
+  section{scroll-margin-top:80px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px;margin:0 0 18px}
+  h2{font-size:21px;letter-spacing:-.02em;margin:0 0 12px}
+  h2 .num{color:var(--accent);font-size:14px;margin-right:8px;font-variant-numeric:tabular-nums}
+  h3{font-size:15px;margin:22px 0 7px}h3:first-of-type{margin-top:4px}
+  p{margin:0 0 11px}.muted{color:var(--dim);font-size:13.5px}
+  code,.mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12.6px}
+  :not(pre)>code{background:#0d0d16;border:1px solid #222234;border-radius:6px;padding:1px 5px;color:#c9c4ff}
+  pre{position:relative;margin:9px 0 0;background:#0d0d15;border:1px solid var(--line);border-radius:11px;padding:14px;overflow-x:auto;font:12.4px/1.6 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:#d8d8e8}
+  pre code{font:inherit}
+  .copy{position:absolute;top:8px;right:8px;z-index:2;background:#1c1b2c;color:var(--dim);border:1px solid var(--line);border-radius:8px;padding:3px 9px;font:600 11px/1.5 inherit;cursor:pointer}
+  .copy:hover{color:var(--txt);border-color:var(--accent)}.copy.done{color:var(--ok);border-color:#1f4d3d}
+  .pill{display:inline-block;border:1px solid var(--line);border-radius:999px;padding:2px 10px;font-size:11.5px;color:var(--dim);background:#0e0e17;white-space:nowrap}
+  .pill.block{color:#c9c4ff;border-color:#3b3560;background:#1a1830}
+  .pill.inline{color:#7dd3fc;border-color:#1d4055;background:#0c1c27}
+  .pill.new{color:#fbbf24;border-color:#5a4520;background:#282113}
+  .table-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:11px;margin:10px 0}
+  table{border-collapse:collapse;width:100%;min-width:620px;font-size:13px}
+  th,td{text-align:left;padding:8px 11px;border-bottom:1px solid #22222f;vertical-align:top}
+  th{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--dim);background:#101019;white-space:nowrap}
+  tr:last-child td{border-bottom:0}td code{word-break:break-word}
+  .tag{display:grid;gap:10px;grid-template-columns:1fr;border:1px solid var(--line);border-radius:13px;background:var(--card2);padding:14px 15px;margin:12px 0}
+  .tag-head{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+  .tag-head code{font-size:13.5px;color:#fff;font-weight:700}
+  .tag p{font-size:13.5px;margin:0}
+  .callout{border-left:3px solid var(--accent);background:#17162a;border-radius:0 11px 11px 0;padding:11px 14px;margin:13px 0;font-size:13.5px;color:#c9c4ff}
+  .callout.warn{border-color:var(--warn);background:#282113;color:#fde68a}
+  .callout.ok{border-color:var(--ok);background:#0f231c;color:#a7f3d0}
+  .chips{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0 0}
+  .chips span{border:1px solid var(--line);background:#0e0e17;color:var(--dim);border-radius:7px;padding:2px 8px;font:12px/1.6 ui-monospace,monospace}
+  footer{max-width:1240px;margin:26px auto 0;color:var(--dim);font-size:12.5px;display:flex;gap:16px;flex-wrap:wrap;border-top:1px solid var(--line);padding-top:16px}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <div class="nav-in">
+    <a class="brand" href="/docs/"><span class="logo">MX</span><span>OCMX docs</span></a>
+    <div class="nav-links">
+      <a href="/docs/">Home</a>
+      <a href="/docs/api">API</a>
+      <a class="active" href="/docs/markdown">Markdown</a>
+      <a href="/">Site</a>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap">
+  <header class="hero">
+    <span class="eyebrow">App renderer · v2.9</span>
+    <h1><span class="g">Markdown vocabulary</span></h1>
+    <p class="lead">The OpenCode Mobile chat renderer is dependency-free: everything is HTML-escaped first, then a small set of custom tags is turned into interactive widgets. This is the exact vocabulary from <code>web/src/markdown.js</code> and the app's <code>AGENTS.md</code>.</p>
+  </header>
+
+  <div class="layout">
+    <aside class="aside">
+      <div class="toc">
+        <strong>Tags</strong>
+        <a href="#basics">Standard markdown</a>
+        <a href="#inline">Inline styling</a>
+        <a href="#cards">Cards &amp; buttons</a>
+        <a href="#progress">Progress &amp; logs</a>
+        <a href="#launch">Shortcuts &amp; releases</a>
+        <a href="#media">Images &amp; HTML viz</a>
+        <a href="#new">New tags</a>
+        <a href="#rules">Renderer rules</a>
+      </div>
+    </aside>
+
+    <main>
+      <section id="basics" class="card">
+        <h2><span class="num">01</span>Standard markdown</h2>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Feature</th><th>Syntax</th><th>Notes</th></tr></thead>
+            <tbody>
+              <tr><td>Headings</td><td><code># … ######</code></td><td>Levels 1–6; deeper hashes are clamped to 6.</td></tr>
+              <tr><td>Emphasis</td><td><code>**bold**</code> <code>*italic*</code> <code>~~strike~~</code></td><td>Inline processing order: code → custom tags → links → emphasis.</td></tr>
+              <tr><td>Inline code</td><td><code>`code`</code></td><td>Extracted before other markup, so tags inside stay literal.</td></tr>
+              <tr><td>Fenced code</td><td><code>```lang … ```</code></td><td>Dependency-free syntax highlighting; unknown languages fall back to escaped text. Every block gets a copy button.</td></tr>
+              <tr><td>Lists</td><td><code>-</code> <code>*</code> <code>+</code> and <code>1.</code> / <code>1)</code></td><td>Indent (2 spaces per level) changes list depth.</td></tr>
+              <tr><td>Tables</td><td><code>| a | b |</code> + <code>|---|---|</code></td><td>GitHub style; optional <code>:---</code> / <code>---:</code> alignment. Wrapped in a horizontal scroller.</td></tr>
+              <tr><td>Quotes</td><td><code>&gt; text</code></td><td>Consecutive lines join with a line break; inline markup still works.</td></tr>
+              <tr><td>Alerts</td><td><code>&gt; [!NOTE]</code>, <code>TIP</code>, <code>IMPORTANT</code>, <code>WARNING</code>, <code>CAUTION</code></td><td>First quote line is the marker; text on the marker line is included in the body.</td></tr>
+              <tr><td>Spoilers</td><td><code>||hidden||</code></td><td>Blurred until tapped; inline formatting and links survive. No <code>|</code> or line breaks inside, and no spoilers in table cells.</td></tr>
+              <tr><td>Details</td><td><code>&lt;details color="#34d399" open&gt; … &lt;/details&gt;</code></td><td>Optional <code>&lt;summary&gt;</code>; defaults to “Details”. <code>color</code> or <code>style</code> tints summary and border.</td></tr>
+              <tr><td>Links</td><td><code>[text](https://…)</code>, <code>&lt;https://…&gt;</code>, bare URLs</td><td>Autolinks open in a new tab with <code>rel="noreferrer"</code>.</td></tr>
+              <tr><td>Rule</td><td><code>---</code> / <code>***</code> / <code>___</code></td><td>Three or more repeated separators.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <pre><code>&gt; [!TIP]
+&gt; Use a spoiler for the answer: ||42||
+
+&lt;details color="#34d399" open&gt;
+&lt;summary&gt;Show more&lt;/summary&gt;
+Hidden **markdown** content.
+&lt;/details&gt;</code></pre>
+      </section>
+
+      <section id="inline" class="card">
+        <h2><span class="num">02</span>Inline styling tags</h2>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Tag</th><th>Effect / constraints</th></tr></thead>
+            <tbody>
+              <tr><td><code>&lt;color=#RRGGBB&gt;text&lt;/color&gt;</code></td><td>Text colour. 3–8 hex digits; CSS names, <code>rgb()</code> and <code>hsl()</code> are also accepted by the parser.</td></tr>
+              <tr><td><code>&lt;bg=#RRGGBB&gt;text&lt;/bg&gt;</code></td><td>Highlight background with rounded padding.</td></tr>
+              <tr><td><code>&lt;size=18&gt;text&lt;/size&gt;</code></td><td>Font size in px, 1–4 digits.</td></tr>
+              <tr><td><code>&lt;center&gt;text&lt;/center&gt;</code></td><td>Centred block.</td></tr>
+              <tr><td><code>&lt;u&gt;text&lt;/u&gt;</code></td><td>Underline.</td></tr>
+              <tr><td><code>&lt;mark&gt;text&lt;/mark&gt;</code></td><td>Marked / highlighted text.</td></tr>
+              <tr><td><code>&lt;svg=name&gt;</code></td><td>Inline vector icon from <code>icons.js</code>. Unknown names render nothing.</td></tr>
+              <tr><td><code>___text___</code></td><td>Dotted underline (“underdot”).</td></tr>
+              <tr><td><code>&lt;ion=name&gt;</code></td><td>Inline ion marker; hydrated into a one-shot full-screen reaction by the message component. Optional closing <code>&lt;/ion&gt;</code> is ignored.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="muted">Icon names available to <code>&lt;svg=…&gt;</code> (from <code>web/src/icons.js</code>):</p>
+        <div class="chips">
+          <span>menu</span><span>plus</span><span>send</span><span>stop</span><span>gear</span><span>trash</span><span>back</span><span>close</span><span>edit</span><span>file</span><span>folder</span><span>folder-up</span><span>terminal</span><span>plug</span><span>bot</span><span>sparkles</span><span>check</span><span>warning</span><span>refresh</span><span>download</span><span>upload</span><span>copy</span><span>search</span><span>code</span><span>git</span><span>crown</span><span>star</span><span>heart</span><span>fire</span><span>bolt</span><span>brain</span><span>rocket</span><span>lock</span><span>key</span><span>info</span><span>question</span><span>clock</span><span>chevron-down</span><span>chevron-right</span><span>play</span><span>save</span><span>eye</span><span>paperclip</span><span>spark</span><span>layers</span><span>project</span><span>schedule</span><span>inbox</span><span>image</span><span>home</span><span>user</span><span>users</span><span>chat</span><span>bug</span><span>shield</span><span>cloud</span><span>database</span><span>filter</span><span>sort</span><span>tag</span><span>bookmark</span><span>mic</span><span>mic-off</span><span>camera</span><span>video</span><span>map</span><span>pin</span><span>link</span><span>unlink</span><span>share</span><span>external-link</span><span>bell</span><span>bell-off</span><span>volume</span><span>volume-x</span><span>battery</span><span>wifi</span><span>bluetooth</span><span>phone</span><span>mail</span><span>calendar</span><span>flag</span><span>moon</span><span>sun</span><span>palette</span><span>sliders</span><span>list</span><span>grid</span><span>maximize</span><span>minimize</span><span>expand</span><span>collapse</span><span>archive</span><span>clipboard</span><span>compass</span><span>cpu</span><span>server</span><span>globe</span><span>activity</span>
+        </div>
+        <pre><code>&lt;color=#9d8cff&gt;&lt;svg=crown&gt; Owner build&lt;/color&gt;
+___tap the dotted link___ &lt;vizreply title="Show details" reply="Show me the details"&gt;</code></pre>
+      </section>
+
+      <section id="cards" class="card">
+        <h2><span class="num">03</span>Cards &amp; buttons</h2>
+
+        <div class="tag">
+          <div class="tag-head"><code>&lt;vizembed&gt;</code><span class="pill block">block</span></div>
+          <p>Bordered Markdown card. Attributes: <code>title</code>, <code>icon</code>, <code>color</code>, <code>footer</code>, <code>content</code>. Literal <code>\n</code> and <code>\t</code> in <code>content</code> become real breaks/tabs; escape quotes as <code>\"</code>.</p>
+          <pre><code>&lt;vizembed title="Build summary" icon="check" color="#34d399" footer="2 min ago" content="**All green.**\n\n- 3 packages built\n- 0 errors"&gt;</code></pre>
+        </div>
+
+        <div class="tag">
+          <div class="tag-head"><code>&lt;vizbtn&gt;</code><span class="pill inline">inline</span></div>
+          <p>Button that sends an exact message to the agent. Attributes: <code>title</code> (or <code>label</code>, default “Send”), <code>icon</code>, <code>message</code> (or <code>prompt</code>).</p>
+          <pre><code>&lt;vizbtn title="Run the tests" icon="play" message="Run the full test suite and summarize failures"&gt;</code></pre>
+        </div>
+
+        <div class="tag">
+          <div class="tag-head"><code>&lt;vizreply&gt;</code><span class="pill inline">inline</span></div>
+          <p>Dotted-underline reply link. Attributes: <code>title</code> (default “Reply”), <code>reply</code> (or <code>message</code>).</p>
+          <pre><code>&lt;vizreply title="Explain the error" reply="Explain the error in the last tool output"&gt;</code></pre>
+        </div>
+
+        <div class="tag">
+          <div class="tag-head"><code>&lt;vizschedule&gt;</code><span class="pill block">block</span></div>
+          <p>Creates an app-side scheduled message. Attributes: <code>name</code>/<code>title</code>, <code>prompt</code>/<code>message</code> (required), <code>delay</code> (e.g. <code>30m</code>), optional <code>every</code> and <code>at</code>. Renders a “Create schedule” button.</p>
+          <pre><code>&lt;vizschedule name="Morning check" prompt="Check the build status." delay="30m"&gt;</code></pre>
+        </div>
+
+        <div class="tag">
+          <div class="tag-head"><code>&lt;vizproject&gt;</code><span class="pill block">block</span></div>
+          <p>Project badge; tapping opens that project's chat. Attributes: <code>id</code> (project id from <code>/api/project</code>), <code>title</code>/<code>name</code>, <code>icon</code>, <code>color</code>, <code>description</code>.</p>
+          <pre><code>&lt;vizproject id="proj_123" title="Website" icon="folder" color="#38bdf8" description="Marketing site"&gt;</code></pre>
+        </div>
+
+        <div class="tag">
+          <div class="tag-head"><code>&lt;vizcalc&gt;</code><span class="pill block">block</span></div>
+          <p>Inline tappable calculator with <code>0-9</code>, <code>.</code>, <code>+</code>, <code>-</code>, <code>*</code>, <code>/</code>, <code>C</code>, <code>=</code>. Optional <code>title</code>.</p>
+          <pre><code>&lt;vizcalc title="Quick math"&gt;</code></pre>
+        </div>
+      </section>
+
+      <section id="progress" class="card">
+        <h2><span class="num">04</span>Progress, logs &amp; separators</h2>
+
+        <div class="tag">
+          <div class="tag-head"><code>&lt;updbar&gt;</code><span class="pill block">block</span></div>
+          <p>Live progress strip; also feeds the global bar under the app header. <code>now=0..100</code> (a <code>%</code> suffix is tolerated, invalid values become 0). 100 turns lime, flashes and shows “Update complete · 100%”. <code>stuck="message"</code> renders a red pulsing blocked state. Re-sending the same value is a no-op.</p>
+          <pre><code>updateProgress:"&lt;updbar now=10&gt;"
+updateProgress:"&lt;updbar now=60&gt;"
+UpdateCompleted:"&lt;updbar now=100&gt;"
+
+&lt;updbar stuck="Auth failed. reworking.."&gt;</code></pre>
+        </div>
+
+        <div class="tag">
+          <div class="tag-head"><code>&lt;utils&gt;</code> / <code>&lt;log&gt;</code><span class="pill block">block</span></div>
+          <p>Compact log-style embed, usually written after an <code>&lt;updbar&gt;</code>. Attributes: <code>title</code>, <code>content</code> (<code>\n</code> → newline), <code>color</code>, <code>level</code>, <code>footer</code>, <code>icon</code>. Level tints the card: error/fail/bad → red, warn/todo/writing → amber, info/ok/done → green.</p>
+          <pre><code>&lt;utils title="Build" content="vite build…\nOK · 3 chunks" color="#2dd4bf" level="info"&gt;</code></pre>
+        </div>
+
+        <div class="tag">
+          <div class="tag-head"><code>&lt;separator&gt;</code> / <code>&lt;divider&gt;</code><span class="pill block">block</span></div>
+          <p>Styled horizontal rule. Attributes: <code>color</code> (hex, rgb, hsl or CSS name) and <code>type</code>, default <code>line</code>.</p>
+          <pre><code>&lt;separator color="#38bdf8" type="gradient"&gt;</code></pre>
+          <p class="muted">Types:</p>
+          <div class="chips"><span>line</span><span>dashed</span><span>dotted</span><span>double</span><span>dot</span><span>star</span><span>heart</span><span>diamond</span><span>wave</span><span>arrow</span><span>gradient</span><span>ornament</span></div>
+        </div>
+      </section>
+
+      <section id="launch" class="card">
+        <h2><span class="num">05</span>Shortcuts, releases &amp; ions</h2>
+
+        <div class="tag">
+          <div class="tag-head"><code>&lt;desklink&gt;</code> / <code>&lt;desktop&gt;</code><span class="pill block">block</span></div>
+          <p>Creates a real Android home-screen shortcut. Attributes: <code>title</code>, <code>action</code>, <code>args</code>, <code>color</code>, <code>icon</code>. Actions: <code>msg</code> / <code>prompt</code> / <code>ask</code> (send text to a session), <code>session</code> (open), <code>open</code> (navigate), <code>toast</code>, <code>notify</code>. <code>args</code> is a <code>key:value</code> DSL joined by <code>|||</code>.</p>
+          <pre><code>&lt;desklink title="Say Hi Me" action="msg" args="msg:Hi, Ai!|||session:ses_jsjsis" color="#2dd4bf"&gt;</code></pre>
+        </div>
+
+        <div class="tag">
+          <div class="tag-head"><code>&lt;rel&gt;</code> / <code>&lt;update&gt;</code><span class="pill block">block</span></div>
+          <p>App-update status panel. Attributes: <code>id</code> (release id), <code>tag</code>, optional <code>version</code>, <code>title</code>, <code>from</code>, <code>color</code>. Each item must be on its own line. AI may only emit <code>Indev</code>, <code>MADE</code>, <code>Failed</code>; <code>on writing</code> is the app's own draft state. <code>MADE</code> releases expose APK download/install actions.</p>
+          <pre><code>&lt;rel id="rel_123" tag="MADE" version="2.9.1" /&gt;</code></pre>
+        </div>
+
+        <div class="tag">
+          <div class="tag-head"><code>&lt;ion=name&gt;</code><span class="pill inline">inline</span></div>
+          <p>One-shot full-screen reaction; one per reply, marker hidden, so surrounding text must stand alone. Inside inline code it stays literal.</p>
+          <pre><code>&lt;ion=party&gt; Release shipped!</code></pre>
+          <p class="muted">Built-in names:</p>
+          <div class="chips"><span>angry</span><span>rage</span><span>happy</span><span>grin</span><span>laugh</span><span>love</span><span>blush</span><span>sad</span><span>cry</span><span>shock</span><span>wow</span><span>think</span><span>cool</span><span>wink</span><span>sleepy</span><span>sick</span><span>dizzy</span><span>dead</span><span>party</span><span>evil</span><span>shy</span><span>rich</span><span>neutral</span></div>
+          <p class="muted" style="margin-top:8px">Custom ions are created in <em>Settings → Custom ions</em> with <code>color1,color2[,color3],title,emoji</code>; the chosen name becomes the tag handle.</p>
+        </div>
+      </section>
+
+      <section id="media" class="card">
+        <h2><span class="num">06</span>Images &amp; HTML visualizations</h2>
+
+        <div class="tag">
+          <div class="tag-head"><code>&lt;img=CODE&gt;</code> / <code>&lt;image=CODE&gt;</code><span class="pill block">block</span></div>
+          <p>Renders a chat image stored on the device. The app tries <code>.png</code>, <code>.jpg</code>, then <code>.jpeg</code>. Missing files show an error card.</p>
+          <pre><code>$HOME/opencode-mobilex/sessions/&lt;sessionID&gt;/generatedx/img/&lt;CODE&gt;.png
+
+&lt;img=abc12def34ghi56&gt;</code></pre>
+        </div>
+
+        <div class="tag">
+          <div class="tag-head"><code>&lt;html-vizualize=CODE&gt;</code><span class="pill block">block</span></div>
+          <p>Loads a self-contained HTML file from Termux home into a sandboxed iframe. Inline <code>&lt;style&gt;</code> and <code>&lt;script&gt;</code> are allowed; remote scripts/stylesheets and network requests are blocked. Keep it under 512 KB; the iframe auto-sizes via the <code>oc:viz-height</code> reporter. Shared styles are injected from <code>~/opencode-mobilex/yiks/main_htmls_style.css</code>.</p>
+          <pre><code>$HOME/opencode-mobilex/sessions/&lt;sessionID&gt;/inMsgHtmls/&lt;CODE&gt;.html
+
+&lt;html-vizualize=abc12def34ghi56&gt;</code></pre>
+          <p class="muted">Codes match <code>[A-Za-z0-9_-]{8,32}</code> — conventionally 15 lowercase alphanumeric characters. Always write files with the <em>current</em> session id.</p>
+        </div>
+      </section>
+
+      <section id="new" class="card">
+        <h2><span class="num">07</span>New tags</h2>
+        <div class="callout warn">These two tags are planned in the app's tag reference; the exact payload format is not final yet — see the tag reference in <code>AGENTS.md</code> for updates.</div>
+        <div class="tag">
+          <div class="tag-head"><code>&lt;copy&gt;TEXT&lt;/copy&gt;</code><span class="pill new">new</span></div>
+          <p>Intent: a copy-to-clipboard region — the enclosed text is presented as a tappable block that copies <code>TEXT</code> verbatim. Useful for tokens, commands, codes and IDs.</p>
+          <pre><code>&lt;copy&gt;ocmx://shared/chat/abc12def34ghi56&lt;/copy&gt;</code></pre>
+        </div>
+        <div class="tag">
+          <div class="tag-head"><code>&lt;inmsgtypes&gt;…&lt;/inmsgtypes&gt;</code><span class="pill new">new</span></div>
+          <p>Intent: an interactive answer form embedded directly in the message — a typed, in-message alternative to the separate question forms. Exact payload format: see tag reference.</p>
+          <pre><code>&lt;inmsgtypes&gt;…&lt;/inmsgtypes&gt;</code></pre>
+        </div>
+      </section>
+
+      <section id="rules" class="card">
+        <h2><span class="num">08</span>Renderer rules worth knowing</h2>
+        <ul>
+          <li>Everything is escaped before markup is applied, so model output cannot inject arbitrary HTML.</li>
+          <li>Embed tags are only rendered as blocks when they sit on their own line; otherwise they are inline widgets.</li>
+          <li>Parameters are parsed as <code>key="value"</code> pairs; <code>\"</code> escapes a quote inside a value. Colour values accept hex, <code>rgb()</code>, <code>hsl()</code> or CSS names.</li>
+          <li>In reasoning blocks, embed tags and diagnostic code fences about them are suppressed — the app strips “thoughts about using” <code>&lt;img&gt;</code>, <code>&lt;vizembed&gt;</code>, etc.</li>
+          <li><code>&lt;details&gt;</code> bodies are rendered recursively, so Markdown and nested tags work inside them.</li>
+          <li>Spoilers must not contain <code>|</code> or line breaks, and do not work inside table cells.</li>
+        </ul>
+        <div class="callout ok">Need the server side? <a href="/docs/api">API reference</a> · <a href="/docs/">OCMX docs home</a></div>
+      </section>
+    </main>
+  </div>
+</div>
+
+<footer>
+  <span>OCMX Markdown vocabulary · source: markdown.js + AGENTS.md</span>
+  <span><a href="/">Home</a></span>
+  <span><a href="/docs/">Docs</a></span>
+  <span><a href="/docs/api">API</a></span>
+</footer>
+
+<script>
+(function(){
+  document.querySelectorAll("pre").forEach(function(pre){
+    var code=pre.querySelector("code");if(!code||pre.querySelector(".copy"))return;
+    var btn=document.createElement("button");btn.type="button";btn.className="copy";btn.textContent="Copy";
+    btn.addEventListener("click",function(){
+      function done(){btn.textContent="Copied";btn.classList.add("done");setTimeout(function(){btn.textContent="Copy";btn.classList.remove("done");},1400);}
+      var text=code.textContent;
+      if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(text).then(done,function(){fb(text,done);});}else{fb(text,done);}
+    });
+    pre.appendChild(btn);
+  });
+  function fb(text,done){var ta=document.createElement("textarea");ta.value=text;ta.style.position="fixed";ta.style.opacity="0";document.body.appendChild(ta);ta.select();try{document.execCommand("copy");done();}catch(e){}document.body.removeChild(ta);}
+  var links=[].slice.call(document.querySelectorAll(".toc a"));
+  var secs=links.map(function(a){return document.querySelector(a.getAttribute("href"));}).filter(Boolean);
+  if("IntersectionObserver" in window&&secs.length){
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){links.forEach(function(a){a.classList.toggle("active",a.getAttribute("href")==="#"+e.target.id);});}});},{rootMargin:"-70px 0px -72% 0px"});
+    secs.forEach(function(s){io.observe(s);});
+  }
+})();
+</script>
+</body>
+</html>
