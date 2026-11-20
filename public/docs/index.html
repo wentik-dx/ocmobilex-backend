@@ -97,6 +97,7 @@
       <a class="btn" href="/docs/markdown">Markdown vocabulary</a>
       <a class="btn" href="/api/status">Health check</a>
     </div>
+    <div class="callout"><strong>App v2.11 markdown is live.</strong> New tags, anchors, socials and strict anti-“dumb mistake” rules — <a href="/docs/markdown#v211">see the v2.11 section</a> · <a href="/docs/markdown#correctness">correctness rules</a>.</div>
   </header>
 
   <div class="layout">
@@ -104,6 +105,7 @@
       <div class="toc">
         <strong>On this page</strong>
         <a href="#what">What OCMX is</a>
+        <a href="#v211">What's new in v2.11</a>
         <a href="#accounts">Accounts &amp; roles</a>
         <a href="#pillars">The Three Pillars</a>
         <a href="#quickstart">Quick start</a>
@@ -124,8 +126,22 @@
         </div>
       </section>
 
+      <section id="v211" class="card">
+        <h2><span class="num">02</span>What's new in v2.11 <span class="pill violet">app</span></h2>
+        <p>The OpenCode Mobile chat renderer jumped to <strong>v2.11</strong>: a big extension of the markdown vocabulary plus stricter correctness rules so AI replies stop breaking the UI.</p>
+        <div class="grid">
+          <div class="tile"><b>Extended text styling</b><p><code>&lt;grad&gt;</code>, <code>&lt;rainbow&gt;</code>, <code>&lt;ctxt&gt;</code>, <code>&lt;strk&gt;</code>, <code>&lt;ftfm&gt;</code>, <code>&lt;gradbg&gt;</code> with animation, glow and pulse.</p></div>
+          <div class="tile"><b>Timestamps &amp; countdowns</b><p><code>&lt;time:{UNIX}:{l|f|t|d}&gt;</code> and <code>&lt;cdown&gt;</code> with green/yellow/red thresholds, plus the <code>getUnixTimeByDate</code> client tool.</p></div>
+          <div class="tile"><b>Navigation &amp; files</b><p><code>&lt;ses&gt;</code>, <code>&lt;dload&gt;</code>, <code>&lt;load&gt;</code>, <code>&lt;file&gt;</code>, <code>&lt;i&gt;</code>, <code>&lt;spline&gt;</code>, <code>&lt;stpr&gt;</code> — all no-closing-tag.</p></div>
+          <div class="tile"><b>Anchors, socials, workflow</b><p><code>&lt;anch&gt;</code>/<code>&lt;toanch&gt;</code>, <code>&lt;soc:{yt|tg}&gt;</code>, the new <code>&lt;sep&gt;</code> separator and <code>&lt;wflow&gt;</code>.</p></div>
+          <div class="tile"><b>Alignment &amp; checkboxes</b><p><code>&lt;align:"r|l|c"&gt;</code> replaces <code>&lt;center&gt;</code>; task lists and <code>&lt;cbx&gt;</code> checkboxes land.</p></div>
+          <div class="tile"><b>Correctness rules</b><p>No stray <code>&lt;/center&gt;</code>, closed <code>&lt;color&gt;</code>, bare <code>&lt;updbar&gt;</code>, no invented tags — <a href="/docs/markdown#correctness">read the rules</a>.</p></div>
+        </div>
+        <div class="callout ok">Full syntax, options and one example per tag: <a href="/docs/markdown#v211">Markdown vocabulary · v2.11 extended section</a>.</div>
+      </section>
+
       <section id="accounts" class="card">
-        <h2><span class="num">02</span>Accounts &amp; roles</h2>
+        <h2><span class="num">03</span>Accounts &amp; roles</h2>
         <p>A username is 3–24 characters of <code>A-Z a-z 0-9 _</code>; a password is 8–200 characters. The first account ever registered — and the reserved name <code>MrWentik</code> — becomes <span class="pill violet">owner</span>. On a fresh deployment the owner can also be created idempotently with <code>POST /api/seed</code> using the <code>X-Owner-Token</code> secret.</p>
         <div class="flow">
           <div class="step"><span>LEVEL 1</span><strong>user</strong><div class="muted">Register, publish, share, report, vote.</div></div>
@@ -137,7 +153,7 @@
       </section>
 
       <section id="pillars" class="card">
-        <h2><span class="num">03</span>The Three Pillars</h2>
+        <h2><span class="num">04</span>The Three Pillars</h2>
         <p class="muted">Everything shared through OCMX is covered by the Terms of Service and Privacy Policy — no illegal, hateful, harassing, infringing or explicit content, and never upload secrets.</p>
         <div class="grid">
           <div class="tile">
@@ -157,7 +173,7 @@
       </section>
 
       <section id="quickstart" class="card">
-        <h2><span class="num">04</span>Quick start</h2>
+        <h2><span class="num">05</span>Quick start</h2>
         <pre><code># health
 curl https://ocmobilex.pages.dev/api/status
 
@@ -178,7 +194,7 @@ curl https://ocmobilex.pages.dev/api/account/me \
       </section>
 
       <section id="links" class="card">
-        <h2><span class="num">05</span>Deep links</h2>
+        <h2><span class="num">06</span>Deep links</h2>
         <p>The app registers the <code>ocmx</code> scheme for every link, and Android App Links verify <code>https://ocmobilex.pages.dev</code> for share and publication paths via <code>/.well-known/assetlinks.json</code>.</p>
         <div class="table-wrap">
           <table>
@@ -201,7 +217,7 @@ curl https://ocmobilex.pages.dev/api/account/me \
       </section>
 
       <section id="next" class="card">
-        <h2><span class="num">06</span>Next steps</h2>
+        <h2><span class="num">07</span>Next steps</h2>
         <div class="grid">
           <a class="tile" href="/docs/api" style="color:var(--txt)"><b>API reference →</b><p>Every endpoint, method, auth header, request body and response shape.</p></a>
           <a class="tile" href="/docs/markdown" style="color:var(--txt)"><b>Markdown vocabulary →</b><p>All custom tags the app renderer understands, from spoilers to viz embeds.</p></a>

@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>OCMX Markdown vocabulary</title>
-<meta name="description" content="Every custom markdown tag supported by OpenCode Mobile: styling, spoilers, details, viz embeds, progress bars, ions, deep links, images and answer forms.">
+<title>OCMX Markdown vocabulary · v2.11</title>
+<meta name="description" content="Every custom markdown tag supported by OpenCode Mobile v2.11: styling, the extended v2.11 vocabulary, correctness rules, spoilers, details, viz embeds, progress bars, ions, deep links and images.">
 <style>
   :root{color-scheme:dark;--bg:#0b0b12;--card:#14141f;--card2:#101019;--line:#262638;--txt:#e7e7f0;--dim:#a1a1b5;--accent:#8b7bff;--accent2:#4fb3ff;--ok:#34d399;--warn:#fbbf24}
   *{box-sizing:border-box}
@@ -80,9 +80,9 @@
 
 <div class="wrap">
   <header class="hero">
-    <span class="eyebrow">App renderer · v2.9</span>
-    <h1><span class="g">Markdown vocabulary</span></h1>
-    <p class="lead">The OpenCode Mobile chat renderer is dependency-free: everything is HTML-escaped first, then a small set of custom tags is turned into interactive widgets. This is the exact vocabulary from <code>web/src/markdown.js</code> and the app's <code>AGENTS.md</code>.</p>
+    <span class="eyebrow">App renderer · v2.11</span>
+    <h1><span class="g">Markdown vocabulary</span> <span class="pill new">v2.11</span></h1>
+    <p class="lead">The OpenCode Mobile chat renderer is dependency-free: everything is HTML-escaped first, then a small set of custom tags is turned into interactive widgets. This is the exact vocabulary from <code>web/src/markdown.js</code> and the app's <code>AGENTS.md</code>, updated for <strong>v2.11</strong> — including the new <a href="#v211">extended vocabulary</a> and mandatory <a href="#correctness">correctness rules</a>.</p>
   </header>
 
   <div class="layout">
@@ -95,7 +95,8 @@
         <a href="#progress">Progress &amp; logs</a>
         <a href="#launch">Shortcuts &amp; releases</a>
         <a href="#media">Images &amp; HTML viz</a>
-        <a href="#new">New tags</a>
+        <a href="#v211">v2.11 extended vocabulary</a>
+        <a href="#correctness">Correctness rules</a>
         <a href="#rules">Renderer rules</a>
       </div>
     </aside>
@@ -140,12 +141,16 @@ Hidden **markdown** content.
               <tr><td><code>&lt;color=#RRGGBB&gt;text&lt;/color&gt;</code></td><td>Text colour. 3–8 hex digits; CSS names, <code>rgb()</code> and <code>hsl()</code> are also accepted by the parser.</td></tr>
               <tr><td><code>&lt;bg=#RRGGBB&gt;text&lt;/bg&gt;</code></td><td>Highlight background with rounded padding.</td></tr>
               <tr><td><code>&lt;size=18&gt;text&lt;/size&gt;</code></td><td>Font size in px, 1–4 digits.</td></tr>
-              <tr><td><code>&lt;center&gt;text&lt;/center&gt;</code></td><td>Centred block.</td></tr>
+              <tr><td><code>&lt;center&gt;text&lt;/center&gt;</code></td><td><strong>Removed in v2.11.</strong> Use <code>&lt;align:"c"&gt;text&lt;/align&gt;</code> — see <a href="#v211">v2.11 vocabulary</a>.</td></tr>
               <tr><td><code>&lt;u&gt;text&lt;/u&gt;</code></td><td>Underline.</td></tr>
               <tr><td><code>&lt;mark&gt;text&lt;/mark&gt;</code></td><td>Marked / highlighted text.</td></tr>
               <tr><td><code>&lt;svg=name&gt;</code></td><td>Inline vector icon from <code>icons.js</code>. Unknown names render nothing.</td></tr>
               <tr><td><code>___text___</code></td><td>Dotted underline (“underdot”).</td></tr>
               <tr><td><code>&lt;ion=name&gt;</code></td><td>Inline ion marker; hydrated into a one-shot full-screen reaction by the message component. Optional closing <code>&lt;/ion&gt;</code> is ignored.</td></tr>
+              <tr><td><code>&lt;align:"r|l|c"&gt;text&lt;/align&gt;</code> <span class="pill new">v2.11</span></td><td>Alignment — replaces <code>&lt;center&gt;</code>.</td></tr>
+              <tr><td><code>&lt;kbd&gt;SHIFT + F11&lt;/kbd&gt;</code> <span class="pill new">v2.11</span></td><td>Keyboard keycap.</td></tr>
+              <tr><td><code>&lt;time:{UNIX}:{l|f|t|d}&gt;</code> <span class="pill new">v2.11</span></td><td>Timestamp; no closing tag. Use <code>getUnixTimeByDate</code>.</td></tr>
+              <tr><td><code>&lt;i:{ICON} %clr:"#..."&gt;</code> <span class="pill new">v2.11</span></td><td>SVG icon; no closing tag. Unknown icon → blue <code>?</code> circle.</td></tr>
             </tbody>
           </table>
         </div>
@@ -202,10 +207,10 @@ ___tap the dotted link___ &lt;vizreply title="Show details" reply="Show me the d
 
         <div class="tag">
           <div class="tag-head"><code>&lt;updbar&gt;</code><span class="pill block">block</span></div>
-          <p>Live progress strip; also feeds the global bar under the app header. <code>now=0..100</code> (a <code>%</code> suffix is tolerated, invalid values become 0). 100 turns lime, flashes and shows “Update complete · 100%”. <code>stuck="message"</code> renders a red pulsing blocked state. Re-sending the same value is a no-op.</p>
-          <pre><code>updateProgress:"&lt;updbar now=10&gt;"
-updateProgress:"&lt;updbar now=60&gt;"
-UpdateCompleted:"&lt;updbar now=100&gt;"
+          <p>Live progress strip; also feeds the global bar under the app header. <code>now=0..100</code> (a <code>%</code> suffix is tolerated, invalid values become 0). 100 turns lime, flashes and shows “Update complete · 100%”. <code>stuck="message"</code> renders a red pulsing blocked state. Re-sending the same value is a no-op. <strong>Emit the tag bare</strong> — never wrap it in <code>updateProgress:"…"</code> or labels; see <a href="#correctness">correctness rules</a>.</p>
+          <pre><code>&lt;updbar now=10&gt;
+&lt;updbar now=60&gt;
+&lt;updbar now=100&gt;
 
 &lt;updbar stuck="Auth failed. reworking.."&gt;</code></pre>
         </div>
@@ -218,9 +223,9 @@ UpdateCompleted:"&lt;updbar now=100&gt;"
 
         <div class="tag">
           <div class="tag-head"><code>&lt;separator&gt;</code> / <code>&lt;divider&gt;</code><span class="pill block">block</span></div>
-          <p>Styled horizontal rule. Attributes: <code>color</code> (hex, rgb, hsl or CSS name) and <code>type</code>, default <code>line</code>.</p>
+          <p>Styled horizontal rule. Attributes: <code>color</code> (hex, rgb, hsl or CSS name) and <code>type</code>, default <code>line</code>. <strong>In v2.11 this is superseded by <code>&lt;sep&gt;</code></strong> — see <a href="#v211">v2.11 vocabulary</a>; the old <code>color</code>/<code>type</code> arguments are dropped.</p>
           <pre><code>&lt;separator color="#38bdf8" type="gradient"&gt;</code></pre>
-          <p class="muted">Types:</p>
+          <p class="muted">Legacy types:</p>
           <div class="chips"><span>line</span><span>dashed</span><span>dotted</span><span>double</span><span>dot</span><span>star</span><span>heart</span><span>diamond</span><span>wave</span><span>arrow</span><span>gradient</span><span>ornament</span></div>
         </div>
       </section>
@@ -271,25 +276,194 @@ UpdateCompleted:"&lt;updbar now=100&gt;"
         </div>
       </section>
 
-      <section id="new" class="card">
-        <h2><span class="num">07</span>New tags</h2>
-        <div class="callout warn">These two tags are planned in the app's tag reference; the exact payload format is not final yet — see the tag reference in <code>AGENTS.md</code> for updates.</div>
+      <section id="v211" class="card">
+        <h2><span class="num">07</span>v2.11 extended vocabulary <span class="pill new">v2.11</span></h2>
+        <p class="muted">Everything below is new in v2.11. Syntax is exact — copy it verbatim. Model output must follow the <a href="#correctness">correctness rules</a> first.</p>
+
+        <h3>Summary</h3>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Tag</th><th>Purpose</th><th>Closing tag?</th></tr></thead>
+            <tbody>
+              <tr><td><code>&lt;time:{UNIX}:{l|f|t|d}&gt;</code></td><td>Timestamp</td><td>No</td></tr>
+              <tr><td><code>&lt;cdown:{UNIX} %clr&gt;</code></td><td>Countdown</td><td>No</td></tr>
+              <tr><td><code>&lt;strk …&gt;TEXT&lt;/strk&gt;</code></td><td>Stroked text</td><td>Yes</td></tr>
+              <tr><td><code>&lt;ftfm:{FONTFAMILY}&gt;TEXT&lt;/ftfm&gt;</code></td><td>Custom font family</td><td>Yes</td></tr>
+              <tr><td><code>&lt;grad …&gt;TEXT&lt;/grad&gt;</code></td><td>Gradient text</td><td>Yes</td></tr>
+              <tr><td><code>&lt;rainbow …&gt;TEXT&lt;/rainbow&gt;</code></td><td>Rainbow text</td><td>Yes</td></tr>
+              <tr><td><code>&lt;ctxt …&gt;TEXT&lt;/ctxt&gt;</code></td><td>“Cool text” effect</td><td>Yes</td></tr>
+              <tr><td><code>&lt;gradbg …&gt;TEXT&lt;/gradbg&gt;</code></td><td>Gradient background</td><td>Yes</td></tr>
+              <tr><td><code>&lt;align:"r|l|c"&gt;TEXT&lt;/align&gt;</code></td><td>Alignment (replaces <code>&lt;center&gt;</code>)</td><td>Yes</td></tr>
+              <tr><td><code>&lt;kbd&gt;SHIFT + F11&lt;/kbd&gt;</code></td><td>Keycap</td><td>Yes</td></tr>
+              <tr><td><code>- [x] / - [ ]</code>, <code>&lt;cbx:x&gt;…&lt;/cbx&gt;</code></td><td>Checkboxes</td><td>Tag form: yes</td></tr>
+              <tr><td><code>&lt;ses:{ID} %a:"ALT"&gt;</code></td><td>Session mention</td><td>No</td></tr>
+              <tr><td><code>&lt;dload:{PATH|URL} %a:"ALT"&gt;</code></td><td>Download on click</td><td>No</td></tr>
+              <tr><td><code>&lt;load:{URL} %a:"ALT"&gt;</code></td><td>Inline media</td><td>No</td></tr>
+              <tr><td><code>&lt;spline:… %a:"ALT" %clr:"#..."&gt;</code></td><td>Sparkline</td><td>No</td></tr>
+              <tr><td><code>&lt;stpr:3-5 %clr:"#..."&gt;</code></td><td>Stepper</td><td>No</td></tr>
+              <tr><td><code>&lt;i:{ICON} %clr:"#..."&gt;</code></td><td>SVG icon</td><td>No</td></tr>
+              <tr><td><code>&lt;file %p:"PATH" %a:"ALT"&gt;</code></td><td>Open in file manager</td><td>No</td></tr>
+              <tr><td><code>&lt;anch …&gt;TEXT&lt;/anch&gt;</code> + <code>&lt;toanch:{ID}&gt;TEXT&lt;/toanch&gt;</code></td><td>Anchor + jump link</td><td>anch: yes, toanch: no</td></tr>
+              <tr><td><code>&lt;soc:{yt|tg} …&gt;TEXT&lt;/soc&gt;</code></td><td>Social preview</td><td>Yes</td></tr>
+              <tr><td><code>&lt;sep %grad1:"#" %clr:"#" %stl:"..." %a:"..."&gt;</code></td><td>Separator (ONLY form now)</td><td>No</td></tr>
+              <tr><td><code>&lt;wflow %s1:"Text" %s1i:"icon" …&gt;</code></td><td>Workflow</td><td>No</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>Timestamps &amp; dates</h3>
         <div class="tag">
-          <div class="tag-head"><code>&lt;copy&gt;TEXT&lt;/copy&gt;</code><span class="pill new">new</span></div>
-          <p>Intent: a copy-to-clipboard region — the enclosed text is presented as a tappable block that copies <code>TEXT</code> verbatim. Useful for tokens, commands, codes and IDs.</p>
-          <pre><code>&lt;copy&gt;ocmx://shared/chat/abc12def34ghi56&lt;/copy&gt;</code></pre>
+          <div class="tag-head"><code>&lt;time:{UNIX}:{l|f|t|d}&gt;</code><span class="pill new">new</span><span class="pill inline">no closing tag</span></div>
+          <p>Timestamp rendered as grayish-white text on a gray background. Mode: <code>l</code> = time left, <code>f</code> = full, <code>t</code> = time only, <code>d</code> = date only. Use the <code>getUnixTimeByDate</code> client tool to get Unix seconds fast.</p>
+          <pre><code>&lt;time:1732147200:f&gt;</code></pre>
         </div>
         <div class="tag">
-          <div class="tag-head"><code>&lt;inmsgtypes&gt;…&lt;/inmsgtypes&gt;</code><span class="pill new">new</span></div>
-          <p>Intent: an interactive answer form embedded directly in the message — a typed, in-message alternative to the separate question forms. Exact payload format: see tag reference.</p>
-          <pre><code>&lt;inmsgtypes&gt;…&lt;/inmsgtypes&gt;</code></pre>
+          <div class="tag-head"><code>&lt;cdown:{UNIX} %clr&gt;</code><span class="pill new">new</span><span class="pill inline">no closing tag</span></div>
+          <p>Countdown. Colour by remaining threshold: <strong>51–100% green</strong>, <strong>11–50% yellow</strong>, <strong>1–10% red</strong>, <strong>0% <code>#ff0000</code></strong>, with a gray outline. <code>%clr</code> overrides the colour.</p>
+          <pre><code>&lt;cdown:1732147200 %clr:"#38bdf8"&gt;</code></pre>
         </div>
+
+        <h3>Text decoration</h3>
+        <div class="tag">
+          <div class="tag-head"><code>&lt;strk %clr:"#ffffff" %size:"1"&gt;TEXT&lt;/strk&gt;</code><span class="pill new">new</span></div>
+          <p>Stroked (outlined) text. <code>%clr</code> = stroke colour, <code>%size</code> = stroke width.</p>
+          <pre><code>&lt;strk %clr:"#ffffff" %size:"1"&gt;BOLD&lt;/strk&gt;</code></pre>
+        </div>
+        <div class="tag">
+          <div class="tag-head"><code>&lt;ftfm:{FONTFAMILY}&gt;TEXT&lt;/ftfm&gt;</code><span class="pill new">new</span></div>
+          <p>Custom font family for the enclosed text.</p>
+          <pre><code>&lt;ftfm:JetBrains Mono&gt;hello&lt;/ftfm&gt;</code></pre>
+        </div>
+        <div class="tag">
+          <div class="tag-head"><code>&lt;grad c1:"#" c2:"#" … c10:"#" %anim:0.3 %glw %pul:0.2&gt;TEXT&lt;/grad&gt;</code><span class="pill new">new</span></div>
+          <p>Gradient text. Up to 10 colour stops <code>c1:"#"</code> … <code>c10:"#"</code>. Modifiers: <code>%anim</code> = animation seconds, <code>%glw</code> = glow, <code>%pul</code> = pulse seconds.</p>
+          <pre><code>&lt;grad c1:"#8b7bff" c2:"#4fb3ff" %anim:0.3 %glw %pul:0.2&gt;v2.11&lt;/grad&gt;</code></pre>
+        </div>
+        <div class="tag">
+          <div class="tag-head"><code>&lt;rainbow %anim:0.3 %glw %pul:0.2&gt;TEXT&lt;/rainbow&gt;</code><span class="pill new">new</span></div>
+          <p>Rainbow text with the same animation modifiers as <code>&lt;grad&gt;</code>.</p>
+          <pre><code>&lt;rainbow %anim:0.3 %glw&gt;RAINBOW&lt;/rainbow&gt;</code></pre>
+        </div>
+        <div class="tag">
+          <div class="tag-head"><code>&lt;ctxt:{glitch|neon|wave|flip|pulse|smallcaps} %anim %sp:0.2 %glw %pul:0.2&gt;TEXT&lt;/ctxt&gt;</code><span class="pill new">new</span></div>
+          <p>“Cool text” effect. Effect names: <span class="chips"><span>glitch</span><span>neon</span><span>wave</span><span>flip</span><span>pulse</span><span>smallcaps</span></span> Modifiers: <code>%anim</code>, <code>%sp</code> (speed), <code>%glw</code> (glow), <code>%pul</code> (pulse seconds).</p>
+          <pre><code>&lt;ctxt:neon %sp:0.2 %glw&gt;NEON&lt;/ctxt&gt;</code></pre>
+        </div>
+        <div class="tag">
+          <div class="tag-head"><code>&lt;gradbg c1:… c10:… %anim %glw %pul&gt;TEXT&lt;/gradbg&gt;</code><span class="pill new">new</span></div>
+          <p>Gradient background using the same colour stops and modifiers as <code>&lt;grad&gt;</code>.</p>
+          <pre><code>&lt;gradbg c1:"#14141f" c2:"#1b1830" %anim:0.3&gt;BG&lt;/gradbg&gt;</code></pre>
+        </div>
+
+        <h3>Alignment, keys, checkboxes</h3>
+        <div class="tag">
+          <div class="tag-head"><code>&lt;align:"r|l|c"&gt;TEXT&lt;/align&gt;</code><span class="pill new">new</span></div>
+          <p>Alignment: <code>r</code> right, <code>l</code> left, <code>c</code> centre. <strong>REPLACES <code>&lt;center&gt;</code></strong> — <code>&lt;/center&gt;</code> is removed from the vocabulary (see <a href="#correctness">correctness rules</a>).</p>
+          <pre><code>&lt;align:"c"&gt;centered&lt;/align&gt;</code></pre>
+        </div>
+        <div class="tag">
+          <div class="tag-head"><code>&lt;kbd&gt;SHIFT + F11&lt;/kbd&gt;</code><span class="pill new">new</span></div>
+          <p>Keyboard keycap.</p>
+          <pre><code>&lt;kbd&gt;SHIFT + F11&lt;/kbd&gt;</code></pre>
+        </div>
+        <div class="tag">
+          <div class="tag-head"><code>- [x] TEXT</code> / <code>- [ ] TEXT</code> / <code>&lt;cbx:x&gt;TEXT&lt;/cbx&gt;</code><span class="pill new">new</span></div>
+          <p>Task-list checkboxes. Markdown forms: <code>- [x]</code> checked, <code>- [ ]</code> unchecked. Tag forms: <code>&lt;cbx:x&gt;TEXT&lt;/cbx&gt;</code> checked, <code>&lt;cbx&gt;TEXT&lt;/cbx&gt;</code> unchecked.</p>
+          <pre><code>- [x] done
+- [ ] todo
+&lt;cbx:x&gt;done&lt;/cbx&gt; &lt;cbx&gt;todo&lt;/cbx&gt;</code></pre>
+        </div>
+
+        <h3>Navigation &amp; files — no closing tag</h3>
+        <div class="callout warn">Never append a closing tag to <code>&lt;ses&gt;</code>, <code>&lt;dload&gt;</code>, <code>&lt;load&gt;</code>, <code>&lt;spline&gt;</code>, <code>&lt;stpr&gt;</code>, <code>&lt;i&gt;</code> or <code>&lt;file&gt;</code>.</div>
+        <div class="tag">
+          <div class="tag-head"><code>&lt;ses:{SESSION_ID} %a:"ALT"&gt;</code><span class="pill new">new</span><span class="pill inline">no closing tag</span></div>
+          <p>Session mention. Tapping it opens that session. <code>%a</code> sets the alt text.</p>
+          <pre><code>&lt;ses:ses_jsjsis %a:"Bug chat"&gt;</code></pre>
+        </div>
+        <div class="tag">
+          <div class="tag-head"><code>&lt;dload:{PATH|URL} %a:"ALT"&gt;</code><span class="pill new">new</span><span class="pill inline">no closing tag</span></div>
+          <p>Download on click; shows “Show in folder” when the download finishes.</p>
+          <pre><code>&lt;dload:/storage/emulated/0/OpenCode_Directory/app.apk %a:"APK"&gt;</code></pre>
+        </div>
+        <div class="tag">
+          <div class="tag-head"><code>&lt;load:{URL} %a:"ALT"&gt;</code><span class="pill new">new</span><span class="pill inline">no closing tag</span></div>
+          <p>Load media inline.</p>
+          <pre><code>&lt;load:https://example.com/clip.mp4 %a:"clip"&gt;</code></pre>
+        </div>
+        <div class="tag">
+          <div class="tag-head"><code>&lt;spline:1"N1 Alt",5,19,… %a:"ALT" %clr:"#..."&gt;</code><span class="pill new">new</span><span class="pill inline">no closing tag</span></div>
+          <p>Sparkline: comma-separated values, each optionally prefixed with an index and a quoted label. <code>%a</code> = alt text, <code>%clr</code> = line colour.</p>
+          <pre><code>&lt;spline:1"Mon",5,19,8 %a:"chart" %clr:"#34d399"&gt;</code></pre>
+        </div>
+        <div class="tag">
+          <div class="tag-head"><code>&lt;stpr:3-5 %clr:"#..."&gt;</code><span class="pill new">new</span><span class="pill inline">no closing tag</span></div>
+          <p>Stepper. <code>%clr</code> sets the colour.</p>
+          <pre><code>&lt;stpr:3-5 %clr:"#fbbf24"&gt;</code></pre>
+        </div>
+        <div class="tag">
+          <div class="tag-head"><code>&lt;i:{ICON} %clr:"#..."&gt;</code><span class="pill new">new</span><span class="pill inline">no closing tag</span></div>
+          <p>SVG icon from the ~500-name icon set. An unknown icon renders a blue <code>?</code> circle. <code>%clr</code> sets the colour.</p>
+          <pre><code>&lt;i:rocket %clr:"#8b7bff"&gt;</code></pre>
+        </div>
+        <div class="tag">
+          <div class="tag-head"><code>&lt;file %p:"PATH" %a:"ALT"&gt;</code><span class="pill new">new</span><span class="pill inline">no closing tag</span></div>
+          <p>Open a file in the file manager (NOT Termux). <code>%p</code> = path, <code>%a</code> = alt text.</p>
+          <pre><code>&lt;file %p:"/storage/emulated/0/Download/note.txt" %a:"note"&gt;</code></pre>
+        </div>
+
+        <h3>Anchors, socials, separators, workflow</h3>
+        <div class="tag">
+          <div class="tag-head"><code>&lt;anch id:"..." name:"..." icon:"..." clr:"#..."&gt;TEXT&lt;/anch&gt;</code> + <code>&lt;toanch:{ID}&gt;TEXT&lt;/toanch&gt;</code><span class="pill new">new</span></div>
+          <p>Anchor target plus an underdot-highlighted jump link. Clicking <code>&lt;toanch&gt;</code> scrolls to the matching anchor.</p>
+          <pre><code>&lt;anch id:"sec1" name:"Section 1" icon:"star" clr:"#8b7bff"&gt;Section 1&lt;/anch&gt;
+&lt;toanch:sec1&gt;go to section 1&lt;/toanch&gt;</code></pre>
+        </div>
+        <div class="tag">
+          <div class="tag-head"><code>&lt;soc:{yt|tg} {%v / %c / %sv / %app / %ch / %us / %mg}&gt;TEXT&lt;/soc&gt;</code><span class="pill new">new</span></div>
+          <p>Social preview card. Providers: <code>yt</code> (YouTube), <code>tg</code> (Telegram) for now; more later. Modifiers: <code>%v</code>, <code>%c</code>, <code>%sv</code>, <code>%app</code>, <code>%ch</code>, <code>%us</code>, <code>%mg</code> — pick the preview flavour.</p>
+          <pre><code>&lt;soc:yt %v&gt;https://youtu.be/xyz&lt;/soc&gt;</code></pre>
+        </div>
+        <div class="tag">
+          <div class="tag-head"><code>&lt;sep %grad1:"#" %clr:"#" %stl:"..." %a:"..."&gt;</code><span class="pill new">new</span><span class="pill inline">no closing tag</span></div>
+          <p>Separator. <strong>This is the ONLY form now</strong> — the old <code>&lt;separator color="…" type="…"&gt;</code> arguments are dropped. <code>%grad1</code> sets the gradient start (repeat for more stops), <code>%clr</code> the colour, <code>%stl</code> the style, <code>%a</code> the alt text.</p>
+          <pre><code>&lt;sep %grad1:"#8b7bff" %grad2:"#4fb3ff" %stl:"gradient" %a:"divider"&gt;</code></pre>
+        </div>
+        <div class="tag">
+          <div class="tag-head"><code>&lt;wflow %s1:"Text" %s1i:"icon" %s2:"Text" %s2i:"icon" …&gt;</code><span class="pill new">new</span><span class="pill inline">no closing tag</span></div>
+          <p>Workflow. Each step <code>sN</code> has text and an optional icon <code>sNi</code>.</p>
+          <pre><code>&lt;wflow %s1:"Plan" %s1i:"brain" %s2:"Build" %s2i:"code" %s3:"Ship" %s3i:"rocket"&gt;</code></pre>
+        </div>
+
+        <h3>Client tool</h3>
+        <div class="tag">
+          <div class="tag-head"><code>getUnixTimeByDate [date]</code><span class="pill new">new</span></div>
+          <p>OCMX client tool that returns Unix seconds from a date string — use it for <code>&lt;time:{UNIX}:…&gt;</code> and <code>&lt;cdown:{UNIX} …&gt;</code> instead of guessing.</p>
+          <pre><code>getUnixTimeByDate 2024-11-20T12:00:00Z  →  1732104000</code></pre>
+        </div>
+        <div class="callout ok">Full agent reference: the canonical <code>AGENTS.md</code> — <a href="/docs/">docs home</a> · <a href="/docs/api">API reference</a>.</div>
+      </section>
+
+      <section id="correctness" class="card">
+        <h2><span class="num">08</span>CRITICAL — markdown correctness rules <span class="pill new">read first</span></h2>
+        <p class="muted">These rules mirror §0.1 of the canonical <code>AGENTS.md</code>. Dumb markdown mistakes break the chat UI — get these right every time before you hit send.</p>
+        <div class="callout warn">
+          <ol>
+            <li><strong>Never emit stray closing tags.</strong> <code>&lt;/center&gt;</code> is REMOVED from the vocabulary — use <code>&lt;align:"c"&gt;TEXT&lt;/align&gt;</code>. Any unknown or malformed closing tag must be silently dropped by the app, never shown as literal text.</li>
+            <li><strong><code>&lt;color=#RRGGBB&gt;</code> MUST be closed with <code>&lt;/color&gt;</code>.</strong> Never write <code>&lt;color=#fff TEXT</code> — always <code>&lt;color=#fff&gt;TEXT&lt;/color&gt;</code>. Same for other paired tags (<code>&lt;bg&gt;</code>, <code>&lt;size&gt;</code>, <code>&lt;align&gt;</code>, <code>&lt;strk&gt;</code>, <code>&lt;ftfm&gt;</code>, <code>&lt;grad&gt;</code>, <code>&lt;rainbow&gt;</code>, <code>&lt;ctxt&gt;</code>, <code>&lt;gradbg&gt;</code>, <code>&lt;cbx&gt;</code>, <code>&lt;soc&gt;</code>, <code>&lt;anch&gt;</code>, <code>&lt;toanch&gt;</code>, <code>&lt;kbd&gt;</code>).</li>
+            <li><strong><code>&lt;updbar&gt;</code> is emitted BARE:</strong> <code>&lt;updbar now=40&gt;</code>. NEVER write <code>updateProgress:"&lt;updbar now=40&gt;"</code> and never wrap it in prose or labels.</li>
+            <li><strong>These tags do NOT take a closing tag</strong> — never append <code>&lt;/…&gt;</code>: <code>&lt;ses&gt;</code>, <code>&lt;dload&gt;</code>, <code>&lt;load&gt;</code>, <code>&lt;spline&gt;</code>, <code>&lt;stpr&gt;</code>, <code>&lt;i&gt;</code>, <code>&lt;file&gt;</code>.</li>
+            <li><strong>When unsure, use plain Markdown.</strong> Prefer the exact syntax shown here; never invent a tag — invented tags render as literal text.</li>
+          </ol>
+        </div>
+        <div class="callout ok">A single stray <code>&lt;/center&gt;</code>, an unclosed <code>&lt;color&gt;</code> or a labelled <code>&lt;updbar&gt;</code> is exactly the kind of error these rules prevent. Full agent reference: <code>AGENTS.md</code> §0.1 and §23.</div>
       </section>
 
       <section id="rules" class="card">
-        <h2><span class="num">08</span>Renderer rules worth knowing</h2>
+        <h2><span class="num">09</span>Renderer rules worth knowing</h2>
         <ul>
           <li>Everything is escaped before markup is applied, so model output cannot inject arbitrary HTML.</li>
+          <li>Unknown or malformed closing tags (for example <code>&lt;/center&gt;</code>) are silently dropped — they never appear as literal text.</li>
           <li>Embed tags are only rendered as blocks when they sit on their own line; otherwise they are inline widgets.</li>
           <li>Parameters are parsed as <code>key="value"</code> pairs; <code>\"</code> escapes a quote inside a value. Colour values accept hex, <code>rgb()</code>, <code>hsl()</code> or CSS names.</li>
           <li>In reasoning blocks, embed tags and diagnostic code fences about them are suppressed — the app strips “thoughts about using” <code>&lt;img&gt;</code>, <code>&lt;vizembed&gt;</code>, etc.</li>
